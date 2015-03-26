@@ -1,11 +1,11 @@
 module Euler.Special where
 
--- collatz sequence
+-- length of collatz sequence starting on n
 collatz :: Integral a => a -> a
 collatz 1 = 1
 collatz n
-    | even n = 1 + collatz (n `div` 2)
-    | odd n  = 1 + collatz (3*n + 1)
+    | even n    = 1 + collatz (n `div` 2)
+    | otherwise = 1 + collatz (3*n + 1)
 
 -- length of the written name of a number (excluding spaces and punctuation)
 numberNameLength :: Num a => Int -> a

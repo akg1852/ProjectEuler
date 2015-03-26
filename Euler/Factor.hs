@@ -51,3 +51,5 @@ numDivisors n = foldl (\acc ps -> (*acc) . succ $ length ps) 1 . group $ primeFa
 -- sum of divisors
 sumDivisors :: Integer -> Integer
 sumDivisors = product . map (\(p,a) -> sum [p^i | i <- [0..a]]) . primeFactors'
+sumProperDivisors :: Integer -> Integer
+sumProperDivisors n = sumDivisors n - n

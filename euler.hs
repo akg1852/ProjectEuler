@@ -1,4 +1,4 @@
-import Data.List (sort, nub, permutations)
+import Data.List (sort, nub, permutations, foldl1')
 import Data.Char (digitToInt)
 import Data.Ratio (numerator)
 import Data.Functor
@@ -76,6 +76,9 @@ euler12 = head . dropWhile ((<= 500) . numDivisors) $ map tri [2..]
 -- 13: Large Sum (first 10 digits)
 euler13 = take 10 . digits . sum . map read . lines <$> readFile "files/large-sum.txt"
 
+-- 14: Longest Collatz sequence
+euler14 = foldl1' (\a b -> if snd a > snd b then a else b) (map (\x -> (x, collatz x)) [500000..999999])
+
 -- 15: Lattice paths - number of routes through a grid
 euler15 = paths 20 20
     where paths rows cols = (rows + cols) `choose` rows
@@ -94,8 +97,18 @@ euler19 = length [1 | y <- [1901..2000], m <- [1..12], (dayOfTheWeek y m 1) == "
 -- 20: Factorial digit sum
 euler20 = sum . digits . factorial $ 100
 
+-- 21: amicable numbers
+euler21 = sum [a | a <- [2..9999], let b = sumProperDivisors a, a /= b, b /= 1, sumProperDivisors b == a]
+
 -- 22: Name Scores
 euler22 =  sum . zipWith (*) [1..] . map wordValue . sort . splitOn ',' <$> readFile "files/names.txt"
+
+-- 23: Non-abundant sums
+-- (slow: takes ~4.5 minutes to run)
+euler23 = sum $ filter nonAbundantSum [1..28123]
+  where
+    nonAbundantSum n = null [x | let aa = takeWhile (<n) abundant, x <- aa, let y = n - x, y `elem` aa]
+    abundant = filter (\n -> sumProperDivisors n > n) [2..]
 
 -- 24: Lexicographic permutations
 euler24 = undigits . (!! 999999) . sort . permutations $ [0..9]
@@ -132,7 +145,7 @@ euler37 = sum . take 11 . filter (\p -> trunc tail p && trunc init p) $ drop 4 p
 euler42 = length . filter isTriangle . map wordValue . splitOn ',' <$> readFile "files/words.txt"
     where isTriangle n = isInteger ((sqrt (8 * fromIntegral n + 1) - 1) / 2)
 
--- 46: Smallest odd composite not the sum of a prime and twice a square?
+-- 46: Smallest odd composite not the sum of a prime and twice a square
 euler46 = head [ n | n <- [3,5..], not $ isPrime n,
     all (\r -> odd r || not (isSquare (r `div` 2))) $ map (n-) . takeWhile (<n) $ primes]
 
