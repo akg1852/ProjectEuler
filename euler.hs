@@ -1,5 +1,6 @@
-import Data.List (sort, nub, permutations, foldl1')
+import Data.List (sort, nub, permutations, foldl1', maximumBy)
 import Data.Char (digitToInt)
+import Data.Ord (comparing)
 import Data.Ratio (numerator)
 import Data.Functor
 
@@ -115,6 +116,12 @@ euler24 = undigits . (!! 999999) . sort . permutations $ [0..9]
 
 -- 25: 1000-digit Fibonacci number
 euler25 = length . takeWhile (< 10^999) $ fib
+
+-- 27: Quadratic primes
+euler27 = snd . maximumBy (comparing fst) $ [(length q, a * b) | a <- range, b <- range, let q = takeWhile isPrime $ map (formula a b) [1..]]
+  where
+    range = [-1000..1000]
+    formula a b n = n^2 + a*n + b
 
 -- 28: Sum of the diagonals in an ulam spiral
 euler28 = sum . ulumDiags $ 1001
