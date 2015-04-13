@@ -178,6 +178,13 @@ e n = (+2) . go n $ (\x -> [1,x,1]) =<< [2,4..]
 -- 67: Maximum Path Sum
 euler67 = maxPathSum . reverse . getLineElements <$> readFile "files/triangle.txt"
 
+-- 89: Roman numerals
+euler89 = do
+    file <- readFile "files/roman.txt"
+    let before = lines file
+    let after = map (toRoman . fromRoman) before
+    return $ (length $ concat before) - (length $ concat after)
+
 -- 113: Non-bouncy numbers below 10^100
 euler113 = sum $ map (\d -> ascending d + descending d - 9) [1..100]
   where

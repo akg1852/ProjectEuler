@@ -1,5 +1,8 @@
 module Euler.Special where
 
+import Data.Char (toUpper)
+import Data.List (isPrefixOf)
+
 -- length of collatz sequence starting on n
 collatz :: Integral a => a -> a
 collatz 1 = 1
@@ -47,3 +50,23 @@ ulumDiags 0 = [0]
 ulumDiags 1 = [1]
 ulumDiags n = map ((+ head prev) . (*(n-1))) [4,3,2,1] ++ prev
     where prev = ulumDiags (n-2)
+
+-- roman numerals
+toRoman :: Integer -> String
+toRoman i = go i romanNumerals
+  where
+    go 0 _ = ""
+    go i numerals = let numerals' = dropWhile (\num -> snd num > i) numerals; num = head numerals'
+        in (fst num) ++ (go (i - (snd num)) numerals')
+fromRoman :: String -> Integer
+fromRoman xs = go (map toUpper xs) romanNumerals
+  where
+    go "" _ = 0
+    go xs numerals = case dropWhile (\num -> not (fst num `isPrefixOf` xs)) numerals of
+        [] -> error "not a valid roman numeral"
+        ns@(n:_) -> snd n + go (drop (length (fst n)) xs) (ns)
+romanNumerals :: [(String, Integer)]
+romanNumerals = [("M", 1000),
+    ("CM", 900), ("D", 500), ("CD", 400), ("C", 100),
+    ("XC", 90), ("L", 50), ("XL", 40), ("X", 10),
+    ("IX", 9), ("V", 5), ("IV", 4), ("I", 1)]
