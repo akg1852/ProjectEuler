@@ -141,6 +141,14 @@ euler31 = length . coinCombos 200 $ [200, 100, 50, 20, 10, 5, 2, 1]
         | otherwise     = concat [map (x:) . coinCombos (total - x) . dropWhile (> x) $ remCoins | x <- remCoins]
         where remCoins = dropWhile (> total) coins
 
+-- 35 Circular primes
+-- (slow: takes ~2 minutes to run)
+euler35 = length . filter isCircularPrime $ takeWhile (< 10^6) primes
+
+--36 Double-base palindromes
+euler36 = sum . filter (\n -> palindromic (show n) && palindromic (toBinary n)) $ [1 .. 10^6]
+    where palindromic s = reverse s == s
+
 -- 37: Sum of all (doubly) truncatable primes
 euler37 = sum . take 11 . filter (\p -> trunc tail p && trunc init p) $ drop 4 primes
   where

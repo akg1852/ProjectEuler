@@ -55,3 +55,8 @@ splitOn c = map Text.unpack . Text.split (== c) . Text.pack
 -- get Lines
 getLineElements :: Read a => String -> [[a]]
 getLineElements = map (map read . words) . lines
+
+-- convert to binary
+toBinary :: (Integral a, Show a) => a -> String
+toBinary 0 = ""
+toBinary n = let (d,m) = n `divMod` 2 in (toBinary d) ++ (show m)

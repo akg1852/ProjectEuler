@@ -53,3 +53,10 @@ sumDivisors :: Integer -> Integer
 sumDivisors = product . map (\(p,a) -> sum [p^i | i <- [0..a]]) . primeFactors'
 sumProperDivisors :: Integer -> Integer
 sumProperDivisors n = sumDivisors n - n
+
+-- circular prime test
+isCircularPrime :: Integer -> Bool
+isCircularPrime n = all isPrime $ fmap (read . take l . ($ cycle s) . drop) [0 .. l-1]
+  where
+    s = show n
+    l = length s
