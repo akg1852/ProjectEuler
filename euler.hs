@@ -1,5 +1,5 @@
-import Data.List (sort, nub, permutations, foldl1', maximumBy)
-import Data.Char (digitToInt)
+import Data.List (sort, nub, permutations, foldl1', maximumBy, elemIndex)
+import Data.Char (digitToInt, intToDigit)
 import Data.Ord (comparing)
 import Data.Ratio (numerator)
 import Data.Functor
@@ -116,6 +116,15 @@ euler24 = undigits . (!! 999999) . sort . permutations $ [0..9]
 
 -- 25: 1000-digit Fibonacci number
 euler25 = length . takeWhile (< 10^999) $ fib
+
+-- 26: Reciprocal Cycles
+euler26 = maximumBy (comparing (cycleLength [] . rems 1)) [2..1000]
+  where
+    rems n d = let r = (10*n) `rem` d in r:(rems r d)
+    cycleLength _ (0:_) = 0
+    cycleLength l (x:xs) = case x `elemIndex` l of
+        Nothing -> cycleLength (x:l) xs
+        Just i  -> i + 1
 
 -- 27: Quadratic primes
 euler27 = snd . maximumBy (comparing fst) $ [(length q, a * b) | a <- range, b <- range, let q = takeWhile isPrime $ map (formula a b) [1..]]
